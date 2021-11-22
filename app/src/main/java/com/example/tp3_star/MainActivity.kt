@@ -1,7 +1,9 @@
 package com.example.tp3_star
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
+
+        this.sendNotif()
     }
 
     fun initChangeHour(){
@@ -94,32 +98,29 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    /*
     fun sendNotif(){
-        mBuilder = NotificationCompat.Builder(mContext.getApplicationContext(), "notify_001");
-        Intent ii = new Intent(mContext.getApplicationContext(), RootActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, ii, 0);
+        val mBuilder = NotificationCompat.Builder(this.getApplicationContext(), "notify_001")
+        val ii = Intent(this.getApplicationContext(), MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, ii, 0)
 
-        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-        bigText.bigText(verseurl);
-        bigText.setBigContentTitle("Today's Bible Verse");
+        val bigText = NotificationCompat.BigTextStyle();
+        bigText.bigText("Cliquer pour télécharger la nouvelle version");
+        bigText.setBigContentTitle("Nouvelle version !");
         bigText.setSummaryText("Text in detail");
 
         mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-        mBuilder.setContentTitle("Your Title");
-        mBuilder.setContentText("Your text");
+        mBuilder.setSmallIcon(R.mipmap.laucher_service);
+        mBuilder.setContentTitle("Cliquer pour télécharger la nouvelle version");
+        mBuilder.setContentText("Nouvelle version !");
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);
 
-        mNotificationManager =
-            (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        val mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-// === Removed some obsoletes
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            String channelId = "Your_channel_id";
-            NotificationChannel channel = new NotificationChannel(
+            val channelId = "com.example.tp3_star";
+            val channel = NotificationChannel(
                 channelId,
                 "Channel human readable title",
                 NotificationManager.IMPORTANCE_HIGH);
@@ -130,5 +131,4 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         mNotificationManager.notify(0, mBuilder.build());
     }
 
-     */
 }
