@@ -30,11 +30,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         dbManager = DBManager(this)
         dbManager.initTest()
 
-
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
-
     }
 
     fun initChangeHour(){
