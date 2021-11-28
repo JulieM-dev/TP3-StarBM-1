@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         downloadData()
         this.affLoad()
-
     }
 
     fun downloadData()
