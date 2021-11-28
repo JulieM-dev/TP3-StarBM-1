@@ -52,28 +52,6 @@ class StarService() : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    fun showNotification( context: Context, title: String, message: String, intent: Intent, reqCode: Int)
-    {
-        val intent = Intent(this, StarService::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        var pendingIntent = PendingIntent.getActivity(context, reqCode, intent, 0)
-        val CHANNEL_ID = "notifs"
-        var notifBuilder : NotificationCompat.Builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setAutoCancel(true)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        val notifManager : NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notifManager.notify(reqCode, notifBuilder.build())
-
-        System.out.println("--------------------------------------- Notif lancée ---------------------------------------")
-
-    }
-
 
     fun checkUpdates()
     {

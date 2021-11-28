@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.core.app.NotificationCompat
+import androidx.core.view.isVisible
 import androidx.room.Room
 import com.example.tp3_star.dataBase.AppDatabase
 import com.example.tp3_star.dataBase.DBManager
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initSpinnerLignesBus()
 
         downloadData()
+        this.affLoad()
 
     }
 
@@ -92,6 +94,34 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
+    }
+
+    fun affLoad(){
+        val textLoad = this.findViewById<TextView>(R.id.textLoad)
+        textLoad.isVisible = true
+
+        val progressLoad = this.findViewById<ProgressBar>(R.id.progressLoad)
+        progressLoad.isVisible = true
+
+        //Téléchargement terminé
+        progressLoad.setProgress(20)
+
+        //Nombre de lignes dans les fichiers
+        val nbLignes = 10000
+        var i = 0
+
+        val t = Thread(Runnable{
+            while(i <= nbLignes){
+                //Insertion d'une ligne
+
+                val progress = (i * 80 / nbLignes) + 20
+                progressLoad.setProgress(progress)
+                textLoad.setText(this.resources.getString(R.string.loading) + " (" + progress + "%)")
+                i++
+            }
+            textLoad.setText(R.string.loadFinish)
+        })
+        t.start()
     }
 
 }

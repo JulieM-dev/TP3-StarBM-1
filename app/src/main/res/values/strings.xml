@@ -4,4 +4,5 @@
     <string name="hour">Heure</string>
     <string name="toDetermine">À déterminer</string>
     <string name="loading">Chargement</string>
+    <string name="loadFinish">Chargement terminé</string>
 </resources>
