@@ -33,6 +33,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
+
+        downloadData()
+
+    }
+
+    fun downloadData()
+    {
+        val unzipManager = UnzipManager(this, "http://ftp.keolis-rennes.com/opendata/tco-busmetro-horaires-gtfs-versions-td/attachments/GTFS_2020.3.2_20211129_20211219.zip")
+        unzipManager.startUnzipping(1)
+        System.out.println("Data downloaded  ------------------------------------------------------------")
     }
 
     fun initChangeHour(){
@@ -83,39 +93,5 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
     }
-
-    fun sendNotif(){
-        val mBuilder = NotificationCompat.Builder(this.getApplicationContext(), "notify_001")
-        val ii = Intent(this.getApplicationContext(), MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, ii, 0)
-
-        val bigText = NotificationCompat.BigTextStyle();
-        bigText.bigText("Cliquer pour télécharger la nouvelle version");
-        bigText.setBigContentTitle("Nouvelle version !");
-        bigText.setSummaryText("Text in detail");
-
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setSmallIcon(R.mipmap.laucher_service);
-        mBuilder.setContentTitle("Cliquer pour télécharger la nouvelle version");
-        mBuilder.setContentText("Nouvelle version !");
-        mBuilder.setPriority(Notification.PRIORITY_MAX);
-        mBuilder.setStyle(bigText);
-
-        val mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            val channelId = "com.example.tp3_star";
-            val channel = NotificationChannel(
-                channelId,
-                "Channel human readable title",
-                NotificationManager.IMPORTANCE_HIGH);
-            mNotificationManager.createNotificationChannel(channel);
-            mBuilder.setChannelId(channelId);
-        }
-
-        mNotificationManager.notify(0, mBuilder.build());
-    }
-
 
 }

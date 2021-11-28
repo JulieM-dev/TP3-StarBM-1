@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import com.example.tp3_star.NotificationStar
 import com.example.tp3_star.R
+import com.example.tp3_star.UnzipManager
 import com.example.tp3_star.UrlRetriever
 import com.example.tp3_star.dataBase.DBManager
 import com.example.tp3_star.dataBase.entities.DatabaseInfos
@@ -108,6 +109,8 @@ class StarService() : Service() {
             }
         }.start()
     }
+
+
 
     fun getJsonObject() : JSONObject?
     {
