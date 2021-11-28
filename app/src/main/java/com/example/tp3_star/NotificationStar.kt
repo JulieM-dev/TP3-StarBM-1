@@ -19,7 +19,7 @@ class NotificationStar {
         val bigText = NotificationCompat.BigTextStyle();
         bigText.bigText("Cliquer pour télécharger la nouvelle version");
         bigText.setBigContentTitle("Nouvelle version !");
-        bigText.setSummaryText("Text in detail");
+        bigText.setSummaryText("Nouvelle version");
 
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setSmallIcon(R.mipmap.laucher_service);

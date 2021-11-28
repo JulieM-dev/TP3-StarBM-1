@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.core.app.NotificationCompat
+import androidx.core.view.isVisible
 import androidx.room.Room
 import com.example.tp3_star.dataBase.AppDatabase
 import com.example.tp3_star.dataBase.DBManager
@@ -30,12 +31,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         dbManager = DBManager(this)
         dbManager.testBusRoutes()
 
-
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
 
         downloadData()
+        this.affLoad()
 
     }
 
@@ -95,38 +96,32 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    fun sendNotif(){
-        val mBuilder = NotificationCompat.Builder(this.getApplicationContext(), "notify_001")
-        val ii = Intent(this.getApplicationContext(), MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, ii, 0)
+    fun affLoad(){
+        val textLoad = this.findViewById<TextView>(R.id.textLoad)
+        textLoad.isVisible = true
 
-        val bigText = NotificationCompat.BigTextStyle();
-        bigText.bigText("Cliquer pour télécharger la nouvelle version");
-        bigText.setBigContentTitle("Nouvelle version !");
-        bigText.setSummaryText("Text in detail");
+        val progressLoad = this.findViewById<ProgressBar>(R.id.progressLoad)
+        progressLoad.isVisible = true
 
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setSmallIcon(R.mipmap.laucher_service);
-        mBuilder.setContentTitle("Cliquer pour télécharger la nouvelle version");
-        mBuilder.setContentText("Nouvelle version !");
-        mBuilder.setPriority(Notification.PRIORITY_MAX);
-        mBuilder.setStyle(bigText);
+        //Téléchargement terminé
+        progressLoad.setProgress(20)
 
-        val mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        //Nombre de lignes dans les fichiers
+        val nbLignes = 10000
+        var i = 0
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            val channelId = "com.example.tp3_star";
-            val channel = NotificationChannel(
-                channelId,
-                "Channel human readable title",
-                NotificationManager.IMPORTANCE_HIGH);
-            mNotificationManager.createNotificationChannel(channel);
-            mBuilder.setChannelId(channelId);
-        }
+        val t = Thread(Runnable{
+            while(i <= nbLignes){
+                //Insertion d'une ligne
 
-        mNotificationManager.notify(0, mBuilder.build());
+                val progress = (i * 80 / nbLignes) + 20
+                progressLoad.setProgress(progress)
+                textLoad.setText(this.resources.getString(R.string.loading) + " (" + progress + "%)")
+                i++
+            }
+            textLoad.setText(R.string.loadFinish)
+        })
+        t.start()
     }
-
 
 }
