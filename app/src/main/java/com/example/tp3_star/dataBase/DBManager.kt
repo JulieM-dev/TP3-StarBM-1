@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.tp3_star.dataBase.entities.BusRoutes
 import com.example.tp3_star.dataBase.entities.DatabaseInfos
+import java.lang.Exception
 
 class DBManager (applicationContext : Context) {
 
@@ -27,8 +28,18 @@ class DBManager (applicationContext : Context) {
 
         System.out.println("----------- Création de la BDD : OK")
         System.out.println(busRoutes)
+        try {
+            if(getDBPublication() == "")
+            {
+                insertDBInfos("1111", "https:///", true)
+            }
+        }
+        catch (e : Exception)
+        {
+            insertDBInfos("1111", "https:///", true)
+        }
 
-        insertDBInfos("1111", "https:///", true)
+
         System.out.println(databaseInfosDao.getInfos())
         busRoutes = busRoutesDao.getAll()
         System.out.println("----------- Récup BDD busRoutes : OK")
