@@ -14,6 +14,7 @@ class NotificationStar {
     fun sendNotif(context: Context){
         val mBuilder = NotificationCompat.Builder(context, "notify_001")
         val ii = Intent(context, MainActivity::class.java)
+        ii.putExtra("download", true)
         val pendingIntent = PendingIntent.getActivity(context, 0, ii, 0)
 
         val bigText = NotificationCompat.BigTextStyle();
@@ -25,6 +26,40 @@ class NotificationStar {
         mBuilder.setSmallIcon(R.mipmap.laucher_service);
         mBuilder.setContentTitle("Cliquer pour télécharger la nouvelle version");
         mBuilder.setContentText("Nouvelle version !");
+        mBuilder.setPriority(Notification.PRIORITY_MAX);
+        mBuilder.setStyle(bigText);
+
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            val channelId = "com.example.tp3_star";
+            val channel = NotificationChannel(
+                channelId,
+                "Channel human readable title",
+                NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+        mNotificationManager.notify(0, mBuilder.build());
+    }
+
+
+    fun sendNotifFinish(context: Context){
+        val mBuilder = NotificationCompat.Builder(context, "notify_001")
+        val ii = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, ii, 0)
+
+        val bigText = NotificationCompat.BigTextStyle();
+        bigText.bigText("Cliquer pour ouvrir l'application");
+        bigText.setBigContentTitle("Téléchargement terminé !");
+        bigText.setSummaryText("Téléchargement terminé");
+
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setSmallIcon(R.mipmap.laucher_service);
+        mBuilder.setContentTitle("Cliquer pour ouvrir l'application");
+        mBuilder.setContentText("Téléchargement terminé !");
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);
 

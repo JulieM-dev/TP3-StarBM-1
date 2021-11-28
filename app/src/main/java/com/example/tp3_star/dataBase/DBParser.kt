@@ -1,10 +1,11 @@
 package com.example.tp3_star.dataBase
 
 import android.content.Context
-import com.example.tp3_star.dataBase.entities.BusRoutes
-import com.example.tp3_star.dataBase.entities.StopTimes
-import com.example.tp3_star.dataBase.entities.Stops
-import com.example.tp3_star.dataBase.entities.Trips
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.core.view.isVisible
+import com.example.tp3_star.R
+import com.example.tp3_star.dataBase.entities.*
 import java.io.File
 import java.io.InputStream
 
@@ -20,7 +21,7 @@ class DBParser(context: Context) {
         val retList = ArrayList<BusRoutes>()
         val inputStream: InputStream = File( downloadPath +"routes.txt").inputStream()
         var firstLine = true;
-        val streamLines = inputStream.bufferedReader().forEachLine {
+        inputStream.bufferedReader().forEachLine {
             if (!firstLine)
             {
                 var line = it.replace("\"", "").split(",")
@@ -39,6 +40,35 @@ class DBParser(context: Context) {
         return retList
     }
 
+    fun parseCalendar() : List<Calendar>
+    {
+        val retList = ArrayList<Calendar>()
+        val inputStream: InputStream = File( downloadPath +"calendar.txt").inputStream()
+        var firstLine = true;
+        inputStream.bufferedReader().forEachLine {
+            if (!firstLine)
+            {
+                var line = it.replace("\"", "").split(",")
+                retList.add(
+                    Calendar(
+                    line.get(0).toDouble(),
+                    strBool(line.get(1)),
+                    strBool(line.get(2)),
+                    strBool(line.get(3)),
+                    strBool(line.get(4)),
+                    strBool(line.get(5)),
+                    strBool(line.get(6)),
+                    strBool(line.get(7)),
+                    line.get(8).toDouble(),
+                    line.get(9).toDouble())
+                )
+            }
+            else firstLine = false
+
+        }
+        return retList
+    }
+
     fun parseStopTimes() : List<StopTimes>
     {
         val retList = ArrayList<StopTimes>()
@@ -48,12 +78,14 @@ class DBParser(context: Context) {
             if (!firstLine)
             {
                 var line = it.replace("\"", "").split(",")
-                retList.add(StopTimes(
+                retList.add(
+                    StopTimes(
                     line.get(0).toDouble(),
                     line.get(1),
                     line.get(2),
                     line.get(3).toInt(),
-                    line.get(4).toInt()))
+                    line.get(4).toInt())
+                )
             }
             else firstLine = false
 
@@ -70,13 +102,15 @@ class DBParser(context: Context) {
             if (!firstLine)
             {
                 var line = it.replace("\"", "").split(",")
-                retList.add(Trips(
+                retList.add(
+                    Trips(
                     line.get(0).toInt(),
                     line.get(1).toDouble(),
                     line.get(3),
                     line.get(5).toInt(),
                     line.get(6),
-                    this.strBool(line.get(8))))
+                    this.strBool(line.get(8)))
+                )
             }
             else firstLine = false
 
@@ -107,10 +141,13 @@ class DBParser(context: Context) {
         return retList
     }
 
+
     fun strBool(string: String) : Boolean
     {
         return (string=="1")
     }
+
+
 
 
 }

@@ -1,8 +1,12 @@
 package com.example.tp3_star
 
+import android.app.Activity
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.core.view.isVisible
 import com.example.tp3_star.dataBase.DBManager
 import com.example.tp3_star.dataBase.DBParser
 import java.io.BufferedOutputStream
@@ -15,9 +19,9 @@ import java.net.URLConnection
 import java.util.zip.ZipInputStream
 
 
-class UnzipManager(context: Context, url: String) {
-    val context = context
+class UnzipManager(activity: Activity, url: String) {
     val passurl = url
+    val activity = activity
 
     private lateinit var BASE_FOLDER: String
 
@@ -45,7 +49,7 @@ class UnzipManager(context: Context, url: String) {
          * ALSO MAKE SURE YOU HAVE SET "INTERNET" AND "NETWORK ACCESS STATE"
          * PERMISSIONS IN APPLICATION'S MANIFEST FILE.
          */Log.d("DEBUG", "In startUnzipping()")
-        BASE_FOLDER = (context.dataDir
+        BASE_FOLDER = (activity.dataDir
                 ).toString()
         /*
          *
@@ -202,25 +206,62 @@ class UnzipManager(context: Context, url: String) {
             isDownloadInProgress = false
             System.out.println("------------------------------------------------------------ End thread  ------------------------------------------------------------")
             testBusRoutes()
+            val notificationStar = NotificationStar()
+            notificationStar.sendNotifFinish(activity)
+            val dbManager = DBManager(activity)
+            dbManager.insertDBInfos(dbManager.getDBPublication(), dbManager.getDBUrl(), true)
+            val downloadDir = File(BASE_FOLDER + File.separator
+                    + "star_temp")
+
+            if(downloadDir.exists())
+            {
+                downloadDir.delete()
+            }
 
         }.start()
     }
 
     fun testBusRoutes()
     {
-        val dbManager = DBManager(context)
-        val dbParser = DBParser(context)
-        dbManager.busRoutesDao.deleteAll()
-        dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
+        val textLoad = activity.findViewById<TextView>(R.id.textLoad)
+        textLoad.isVisible = true
 
-        dbManager.tripsDao.deleteAll()
-        dbManager.tripsDao.insertTrips(dbParser.parseTrips())
+        val progressLoad = activity.findViewById<ProgressBar>(R.id.progressLoad)
+        progressLoad.isVisible = true
 
-        dbManager.stopsDao.deleteAll()
-        dbManager.stopsDao.insertStops(dbParser.parseStops())
+        //Téléchargement terminé
+        progressLoad.setProgress(20)
 
-        dbManager.stopTimesDao.deleteAll()
-        dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
+        val t = Thread(Runnable {
+            val dbManager = DBManager(activity)
+            val dbParser = DBParser(activity)
+            dbManager.busRoutesDao.deleteAll()
+            dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
+
+            progressLoad.setProgress(30)
+
+            dbManager.tripsDao.deleteAll()
+            dbManager.tripsDao.insertTrips(dbParser.parseTrips())
+
+            progressLoad.setProgress(50)
+
+            dbManager.stopsDao.deleteAll()
+            dbManager.stopsDao.insertStops(dbParser.parseStops())
+
+            progressLoad.setProgress(70)
+
+            dbManager.stopTimesDao.deleteAll()
+            dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
+
+            progressLoad.setProgress(85)
+
+            dbManager.calendarDao.deleteAll()
+            dbManager.calendarDao.insertCalendars(dbParser.parseCalendar())
+
+            textLoad.setText(R.string.loadFinish)
+        })
+        t.start()
+
 
     }
 

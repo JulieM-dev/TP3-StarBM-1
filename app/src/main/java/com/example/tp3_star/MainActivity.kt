@@ -30,18 +30,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val alarm = AlarmReceiver()
         alarm.setAlarm(this)
         dbManager = DBManager(this)
-        dbManager.initTest()
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
 
-        downloadData()
-        this.affLoad()
+        if(intent.hasExtra("download"))
+        {
+            downloadData()
+        }
     }
 
     fun downloadData()
     {
-        val unzipManager = UnzipManager(this, "http://ftp.keolis-rennes.com/opendata/tco-busmetro-horaires-gtfs-versions-td/attachments/GTFS_2020.3.2_20211129_20211219.zip")
+        val unzipManager = UnzipManager(this, dbManager.getDBUrl())
         unzipManager.startUnzipping(1)
         System.out.println("Data downloaded  ------------------------------------------------------------")
     }
@@ -108,32 +109,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    fun affLoad(){
-        val textLoad = this.findViewById<TextView>(R.id.textLoad)
-        textLoad.isVisible = true
 
-        val progressLoad = this.findViewById<ProgressBar>(R.id.progressLoad)
-        progressLoad.isVisible = true
-
-        //Téléchargement terminé
-        progressLoad.setProgress(20)
-
-        //Nombre de lignes dans les fichiers
-        val nbLignes = 10000
-        var i = 0
-
-        val t = Thread(Runnable{
-            while(i <= nbLignes){
-                //Insertion d'une ligne
-
-                val progress = (i * 80 / nbLignes) + 20
-                progressLoad.setProgress(progress)
-                textLoad.setText(this.resources.getString(R.string.loading) + " (" + progress + "%)")
-                i++
-            }
-            textLoad.setText(R.string.loadFinish)
-        })
-        t.start()
-    }
 
 }
