@@ -233,6 +233,9 @@ class UnzipManager(context: Context, url: String) {
         dbManager.stopTimesDao.deleteAll()
         dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
 
+        dbManager.calendarDao.deleteAll()
+        dbManager.calendarDao.insertCalendars(dbParser.parseCalendar())
+
 
     }
 

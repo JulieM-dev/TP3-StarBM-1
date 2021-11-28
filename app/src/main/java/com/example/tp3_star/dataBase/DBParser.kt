@@ -1,6 +1,10 @@
 package com.example.tp3_star.dataBase
 
 import android.content.Context
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.core.view.isVisible
+import com.example.tp3_star.R
 import com.example.tp3_star.dataBase.entities.*
 import java.io.File
 import java.io.InputStream
@@ -142,6 +146,8 @@ class DBParser(context: Context) {
     {
         return (string=="1")
     }
+
+
 
 
 }
