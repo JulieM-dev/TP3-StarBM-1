@@ -9,11 +9,26 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
+import com.example.tp3_star.NotificationStar
 import com.example.tp3_star.R
+import com.example.tp3_star.UrlRetriever
+import com.example.tp3_star.dataBase.DBManager
+import com.example.tp3_star.dataBase.entities.DatabaseInfos
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.net.URL
+import java.net.URLConnection
+import org.json.JSONException
+
 
 class StarService() : Service() {
+    private lateinit var dbManager : DBManager
+
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -21,6 +36,7 @@ class StarService() : Service() {
     override fun onCreate() {
         super.onCreate()
         System.out.println("--------------------------------------- Service lancé ---------------------------------------")
+        dbManager = DBManager(this)
     }
 
     override fun onDestroy() {
@@ -30,12 +46,8 @@ class StarService() : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         System.out.println("--------------------------------------- Commande lancée ---------------------------------------")
+        checkUpdates()
 
-
-
-        if (intent != null) {
-            showNotification(applicationContext, "Notif test", "Test de notification", intent, 0)
-        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -64,7 +76,67 @@ class StarService() : Service() {
 
     fun checkUpdates()
     {
+        var response : JSONObject? = null
+        Thread {
+            // do background stuff here
+            response = getJsonObject()
+            try {
+                System.out.println("--------------------------------------- RESPONSE : " + response!!.toString() + " ---------------------------------------")
 
+                val lastRecord = response!!.getJSONArray("records").get(0) as JSONObject
+                Log.e("App", "Success: " + lastRecord.getJSONObject("fields").getString("publication") )
+                val newPublication = lastRecord.getJSONObject("fields").getString("publication")
+                System.out.println("--------------------------------------- "+ dbManager.getDBPublication() +" ---------------------------------------")
+                if(newPublication != "" && newPublication != dbManager.getDBPublication())
+                {
+                    dbManager.insertDBInfos(newPublication, lastRecord.getJSONObject("fields").getString("url"), false)
+                    val notifStar = NotificationStar()
+                    notifStar.sendNotif(this)
+                }
+                else if(!dbManager.getIsDBDownloaded())
+                {
+                    val notifStar = NotificationStar()
+                    notifStar.sendNotif(this)
+
+                }
+                else
+                {
+                    System.out.println("--------------------------------------- DBPublication déjà existante : " + newPublication + " ---------------------------------------")
+                }
+            } catch (ex: JSONException) {
+                Log.e("App", "Failure", ex)
+            }
+        }.start()
     }
+
+    fun getJsonObject() : JSONObject?
+    {
+        val str = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-busmetro-horaires-gtfs-versions-td&q="
+        var urlConn: URLConnection? = null
+        var bufferedReader: BufferedReader? = null
+        return try {
+            val url = URL(str)
+            urlConn = url.openConnection()
+            bufferedReader = BufferedReader(InputStreamReader(urlConn.getInputStream()))
+            val stringBuffer = StringBuffer()
+            var line: String?
+            while (bufferedReader.readLine().also { line = it } != null) {
+                stringBuffer.append(line)
+            }
+            JSONObject(stringBuffer.toString())
+        } catch (ex: Exception) {
+            Log.e("App", "yourDataTask", ex)
+            null
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
 
 }

@@ -11,42 +11,30 @@ import android.widget.*
 import androidx.core.app.NotificationCompat
 import androidx.room.Room
 import com.example.tp3_star.dataBase.AppDatabase
+import com.example.tp3_star.dataBase.DBManager
 import com.example.tp3_star.dataBase.dao.BusRoutesDao
 import com.example.tp3_star.dataBase.entities.BusRoutes
+import com.example.tp3_star.dataBase.entities.DatabaseInfos
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    private lateinit var busRoutesDao: BusRoutesDao
+    private lateinit var dbManager : DBManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val alarm = AlarmReceiver()
+        alarm.setAlarm(this)
+        dbManager = DBManager(this)
+        dbManager.initTest()
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "star-database"
-        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
-
-        this.busRoutesDao = db.busRoutesDao()
-        var busRoutes: List<BusRoutes> = this.busRoutesDao.getAll()
-
-        System.out.println("----------- Création de la BDD : OK")
-        System.out.println(busRoutes)
-
-        val br = BusRoutes(busRoutes.size + 1, "test", "test", "desc1", "typ1", "green", "red")
-        busRoutesDao.insertBusRoute(br)
-
-        busRoutes = busRoutesDao.getAll()
-        System.out.println("----------- Récup BDD busRoutes : OK")
-        System.out.println(busRoutes)
 
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
 
-        this.sendNotif()
     }
 
     fun initChangeHour(){
@@ -83,7 +71,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     fun initSpinnerLignesBus(){
         val spinnerLignesBus = this.findViewById<Spinner>(R.id.spinnerLignesBus)
-        val busRoutes: List<BusRoutes> = this.busRoutesDao.getAll()
+        val busRoutes: List<BusRoutes> = dbManager.getRoutes()
 
         val adapter = CustomAdapter(this, busRoutes)
         spinnerLignesBus.onItemSelectedListener = this
@@ -130,5 +118,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         mNotificationManager.notify(0, mBuilder.build());
     }
+
 
 }
