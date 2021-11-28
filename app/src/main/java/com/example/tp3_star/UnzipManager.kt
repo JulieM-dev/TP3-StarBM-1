@@ -20,6 +20,8 @@ import java.util.zip.ZipInputStream
 
 
 class UnzipManager(activity: Activity, url: String) {
+    private var textLoad: TextView? = null
+    private var progressLoad: ProgressBar? = null
     val passurl = url
     val activity = activity
 
@@ -41,6 +43,10 @@ class UnzipManager(activity: Activity, url: String) {
     var i = 0
     var zipEntry: ZipEntry? = null
     fun startUnzipping(c: Int) {
+        this.progressLoad = activity.findViewById<ProgressBar>(R.id.progressLoad)
+        this.textLoad = activity.findViewById<TextView>(R.id.textLoad)
+
+
         count = c
         /*
          * MAKE SURE THAT localContext VARIABLE HAS BEEN INITIALIZED BEFORE
@@ -223,14 +229,12 @@ class UnzipManager(activity: Activity, url: String) {
 
     fun testBusRoutes()
     {
-        val textLoad = activity.findViewById<TextView>(R.id.textLoad)
-        textLoad.isVisible = true
+        textLoad!!.isVisible = true
 
-        val progressLoad = activity.findViewById<ProgressBar>(R.id.progressLoad)
-        progressLoad.isVisible = true
+        progressLoad!!.isVisible = true
 
         //Téléchargement terminé
-        progressLoad.setProgress(20)
+        progressLoad!!.setProgress(20)
 
         val t = Thread(Runnable {
             val dbManager = DBManager(activity)
@@ -238,27 +242,27 @@ class UnzipManager(activity: Activity, url: String) {
             dbManager.busRoutesDao.deleteAll()
             dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
 
-            progressLoad.setProgress(30)
+            progressLoad!!.setProgress(30)
 
             dbManager.tripsDao.deleteAll()
             dbManager.tripsDao.insertTrips(dbParser.parseTrips())
 
-            progressLoad.setProgress(50)
+            progressLoad!!.setProgress(50)
 
             dbManager.stopsDao.deleteAll()
             dbManager.stopsDao.insertStops(dbParser.parseStops())
 
-            progressLoad.setProgress(70)
+            progressLoad!!.setProgress(70)
 
             dbManager.stopTimesDao.deleteAll()
             dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
 
-            progressLoad.setProgress(85)
+            progressLoad!!.setProgress(85)
 
             dbManager.calendarDao.deleteAll()
             dbManager.calendarDao.insertCalendars(dbParser.parseCalendar())
 
-            textLoad.setText(R.string.loadFinish)
+            textLoad!!.setText(R.string.loadFinish)
         })
         t.start()
 
