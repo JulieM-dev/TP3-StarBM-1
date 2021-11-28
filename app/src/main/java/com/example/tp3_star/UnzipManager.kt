@@ -216,7 +216,11 @@ class UnzipManager(context: Context, url: String) {
         dbManager.tripsDao.deleteAll()
         dbManager.tripsDao.insertTrips(dbParser.parseTrips())
 
+        dbManager.stopsDao.deleteAll()
+        dbManager.stopsDao.insertStops(dbParser.parseStops())
 
+        dbManager.stopTimesDao.deleteAll()
+        dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
 
     }
 
