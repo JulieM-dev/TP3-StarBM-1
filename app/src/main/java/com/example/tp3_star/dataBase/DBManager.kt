@@ -57,6 +57,11 @@ class DBManager (applicationContext : Context) {
         return databaseInfosDao.getInfos().downloaded
     }
 
+    fun getDBUrl() : String
+    {
+        return databaseInfosDao.getInfos().origin_url
+    }
+
     fun insertDBInfos(publication: String, originUrl : String, isDownloaded : Boolean)
     {
         databaseInfosDao.deleteAll()

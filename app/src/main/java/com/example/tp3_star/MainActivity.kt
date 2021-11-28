@@ -35,6 +35,15 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initChangeDate()
         this.initSpinnerLignesBus()
 
+        downloadData()
+
+    }
+
+    fun downloadData()
+    {
+        val unzipManager = UnzipManager(this, "http://ftp.keolis-rennes.com/opendata/tco-busmetro-horaires-gtfs-versions-td/attachments/GTFS_2020.3.2_20211129_20211219.zip")
+        unzipManager.startUnzipping(1)
+        System.out.println("Data downloaded  ------------------------------------------------------------")
     }
 
     fun initChangeHour(){
