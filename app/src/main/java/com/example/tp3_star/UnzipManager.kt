@@ -213,6 +213,10 @@ class UnzipManager(context: Context, url: String) {
         dbManager.busRoutesDao.deleteAll()
         dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
 
+        dbManager.tripsDao.deleteAll()
+        dbManager.tripsDao.insertTrips(dbParser.parseTrips())
+
+
 
     }
 
