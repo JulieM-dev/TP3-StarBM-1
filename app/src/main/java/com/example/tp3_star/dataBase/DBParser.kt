@@ -117,7 +117,7 @@ class DBParser(context: Context) {
     fun parseStops() : List<Stops>
     {
         val retList = ArrayList<Stops>()
-        val inputStream: InputStream = File( downloadPath +"trips.txt").inputStream()
+        val inputStream: InputStream = File( downloadPath +"stops.txt").inputStream()
         var firstLine = true;
         inputStream.bufferedReader().forEachLine {
             if (!firstLine)
