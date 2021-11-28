@@ -36,9 +36,10 @@ class CustomAdapter : BaseAdapter {
         val view = this.inflter.inflate(R.layout.custom_spinner_item, null)
         val libelle = view.findViewById<TextView>(R.id.libelleSpinner)
         val busRoute = this.listBusRoutes.get(i)
-        libelle.setText(busRoute.route_long_name)
-        //libelle.setTextColor(Color.parseColor(busRoute.route_text_color))
-        //view.setBackgroundColor(Color.parseColor(busRoute.route_color))
+        libelle.setText(busRoute.route_short)
+
+        libelle.setTextColor(Color.parseColor("#" + busRoute.route_text_color))
+        view.setBackgroundColor(Color.parseColor("#" + busRoute.route_color))
         view.setPadding(30, 30, 0, 30)
         return view
     }
