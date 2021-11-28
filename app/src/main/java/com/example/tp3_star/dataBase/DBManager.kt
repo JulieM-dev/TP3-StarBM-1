@@ -19,6 +19,8 @@ class DBManager (applicationContext : Context) {
     val stopTimesDao = db.stopTimesDao()
     val tripsDao = db.tripsDao()
 
+    val context = applicationContext
+
     fun initTest()
     {
         var busRoutes: List<BusRoutes> = this.busRoutesDao.getAll()
@@ -28,13 +30,21 @@ class DBManager (applicationContext : Context) {
 
         val br = BusRoutes(busRoutes.size + 1, "test", "test", "desc1", "typ1", "green", "red")
         busRoutesDao.insertBusRoute(br)
-
-
         insertDBInfos("1111", "https:///", true)
         System.out.println(databaseInfosDao.getInfos())
         busRoutes = busRoutesDao.getAll()
         System.out.println("----------- Récup BDD busRoutes : OK")
         System.out.println(busRoutes)
+    }
+
+    fun testBusRoutes()
+    {
+
+            val dbParser = DBParser(context)
+            busRoutesDao.deleteAll()
+            busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
+
+
     }
 
     fun getRoutes() : List<BusRoutes>
