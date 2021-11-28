@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val alarm = AlarmReceiver()
         alarm.setAlarm(this)
         dbManager = DBManager(this)
-        dbManager.testBusRoutes()
-
+        dbManager.initTest()
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()

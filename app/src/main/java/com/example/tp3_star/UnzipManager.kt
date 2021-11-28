@@ -3,6 +3,8 @@ package com.example.tp3_star
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.example.tp3_star.dataBase.DBManager
+import com.example.tp3_star.dataBase.DBParser
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -199,8 +201,19 @@ class UnzipManager(context: Context, url: String) {
             }
             isDownloadInProgress = false
             System.out.println("------------------------------------------------------------ End thread  ------------------------------------------------------------")
+            testBusRoutes()
 
         }.start()
+    }
+
+    fun testBusRoutes()
+    {
+        val dbManager = DBManager(context)
+        val dbParser = DBParser(context)
+        dbManager.busRoutesDao.deleteAll()
+        dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
+
+
     }
 
 }

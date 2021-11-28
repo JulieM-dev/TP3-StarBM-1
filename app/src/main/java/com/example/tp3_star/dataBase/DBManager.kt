@@ -28,8 +28,6 @@ class DBManager (applicationContext : Context) {
         System.out.println("----------- Création de la BDD : OK")
         System.out.println(busRoutes)
 
-        val br = BusRoutes(busRoutes.size + 1, "test", "test", "desc1", "typ1", "green", "red")
-        busRoutesDao.insertBusRoute(br)
         insertDBInfos("1111", "https:///", true)
         System.out.println(databaseInfosDao.getInfos())
         busRoutes = busRoutesDao.getAll()
@@ -37,15 +35,6 @@ class DBManager (applicationContext : Context) {
         System.out.println(busRoutes)
     }
 
-    fun testBusRoutes()
-    {
-
-            val dbParser = DBParser(context)
-            busRoutesDao.deleteAll()
-            busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
-
-
-    }
 
     fun getRoutes() : List<BusRoutes>
     {
