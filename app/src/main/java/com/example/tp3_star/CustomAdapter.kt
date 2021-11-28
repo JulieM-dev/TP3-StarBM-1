@@ -38,6 +38,8 @@ class CustomAdapter : BaseAdapter {
         val busRoute = this.listBusRoutes.get(i)
         libelle.setText(busRoute.route_short)
 
+        //libelle.setText(busRoute.route_long_name)
+
         libelle.setTextColor(Color.parseColor("#" + busRoute.route_text_color))
         view.setBackgroundColor(Color.parseColor("#" + busRoute.route_color))
         view.setPadding(30, 30, 0, 30)

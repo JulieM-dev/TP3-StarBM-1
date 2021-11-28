@@ -22,6 +22,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var dbManager : DBManager
+    private lateinit var selectedBusRoute : BusRoutes
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,8 +93,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerLignesBus.adapter = adapter
     }
 
+    fun initDirections() {
+        val spinnerDirections = this.findViewById<Spinner>(R.id.spinnerDirections)
+
+        val list: List<String> = this.selectedBusRoute.route_long_name.split("<>")
+
+        val adapter = ArrayAdapter<String>(this,
+            android.R.layout.simple_spinner_item,
+            list);
+        spinnerDirections.adapter = adapter
+    }
+
     override fun onItemSelected(adaptor: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        System.out.println("CLICK")
+        val busRoutes: List<BusRoutes> = dbManager.getRoutes()
+        this.selectedBusRoute = busRoutes.get(position)
+        this.initDirections()
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
