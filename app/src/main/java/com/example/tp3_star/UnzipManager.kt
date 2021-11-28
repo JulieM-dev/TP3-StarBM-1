@@ -202,6 +202,17 @@ class UnzipManager(context: Context, url: String) {
             isDownloadInProgress = false
             System.out.println("------------------------------------------------------------ End thread  ------------------------------------------------------------")
             testBusRoutes()
+            val notificationStar = NotificationStar()
+            notificationStar.sendNotifFinish(context)
+            val dbManager = DBManager(context)
+            dbManager.insertDBInfos(dbManager.getDBPublication(), dbManager.getDBUrl(), true)
+            val downloadDir = File(BASE_FOLDER + File.separator
+                    + "star_temp")
+
+            if(downloadDir.exists())
+            {
+                downloadDir.delete()
+            }
 
         }.start()
     }
@@ -221,6 +232,7 @@ class UnzipManager(context: Context, url: String) {
 
         dbManager.stopTimesDao.deleteAll()
         dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
+
 
     }
 

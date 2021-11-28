@@ -34,8 +34,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initChangeDate()
         this.initSpinnerLignesBus()
 
-        downloadData()
+
         this.affLoad()
+
+        if(intent.hasExtra("download"))
+        {
+            downloadData()
+        }
 
     }
 
