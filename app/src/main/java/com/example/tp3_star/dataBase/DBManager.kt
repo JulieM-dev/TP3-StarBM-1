@@ -31,12 +31,12 @@ class DBManager (applicationContext : Context) {
         try {
             if(getDBPublication() == "")
             {
-                insertDBInfos("1111", "https:///", true)
+                insertDBInfos("1111", "http://ftp.keolis-rennes.com/opendata/tco-busmetro-horaires-gtfs-versions-td/attachments/GTFS_2020.3.1_20211108_20211219.zip", true)
             }
         }
         catch (e : Exception)
         {
-            insertDBInfos("1111", "https:///", true)
+            insertDBInfos("1111", "http://ftp.keolis-rennes.com/opendata/tco-busmetro-horaires-gtfs-versions-td/attachments/GTFS_2020.3.1_20211108_20211219.zip", true)
         }
 
 

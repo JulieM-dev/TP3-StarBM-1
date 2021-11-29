@@ -16,6 +16,7 @@ import com.example.tp3_star.dataBase.DBManager
 import com.example.tp3_star.dataBase.dao.BusRoutesDao
 import com.example.tp3_star.dataBase.entities.BusRoutes
 import com.example.tp3_star.dataBase.entities.DatabaseInfos
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,9 +35,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         this.initChangeHour()
         this.initChangeDate()
         this.initSpinnerLignesBus()
+        try {
+            dbManager.getDBPublication()
+        }
+        catch (e : Exception)
+        {
+            downloadData()
+        }
 
         if(intent.hasExtra("download"))
         {
+            intent.replaceExtras(Bundle())
             downloadData()
         }
     }

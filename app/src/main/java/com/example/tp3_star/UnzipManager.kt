@@ -20,8 +20,8 @@ import java.util.zip.ZipInputStream
 
 
 class UnzipManager(activity: Activity, url: String) {
-    private var textLoad: TextView? = null
-    private var progressLoad: ProgressBar? = null
+    private lateinit var textLoad: TextView
+    private lateinit var progressLoad: ProgressBar
     val passurl = url
     val activity = activity
 
@@ -45,6 +45,9 @@ class UnzipManager(activity: Activity, url: String) {
     fun startUnzipping(c: Int) {
         this.progressLoad = activity.findViewById<ProgressBar>(R.id.progressLoad)
         this.textLoad = activity.findViewById<TextView>(R.id.textLoad)
+        textLoad.isVisible = true
+
+        progressLoad.isVisible = true
 
 
         count = c
@@ -212,8 +215,6 @@ class UnzipManager(activity: Activity, url: String) {
             isDownloadInProgress = false
             System.out.println("------------------------------------------------------------ End thread  ------------------------------------------------------------")
             testBusRoutes()
-            val notificationStar = NotificationStar()
-            notificationStar.sendNotifFinish(activity)
             val dbManager = DBManager(activity)
             dbManager.insertDBInfos(dbManager.getDBPublication(), dbManager.getDBUrl(), true)
             val downloadDir = File(BASE_FOLDER + File.separator
@@ -229,40 +230,43 @@ class UnzipManager(activity: Activity, url: String) {
 
     fun testBusRoutes()
     {
-        textLoad!!.isVisible = true
 
-        progressLoad!!.isVisible = true
 
         //Téléchargement terminé
-        progressLoad!!.setProgress(20)
+        progressLoad.setProgress(20)
 
         val t = Thread(Runnable {
             val dbManager = DBManager(activity)
-            val dbParser = DBParser(activity)
+            val dbParser = DBParser(activity, textLoad, progressLoad)
             dbManager.busRoutesDao.deleteAll()
             dbManager.busRoutesDao.insertBusRoutes(dbParser.parseBusRoutes())
 
-            progressLoad!!.setProgress(30)
+            progressLoad.setProgress(30)
 
             dbManager.tripsDao.deleteAll()
             dbManager.tripsDao.insertTrips(dbParser.parseTrips())
 
-            progressLoad!!.setProgress(50)
+            progressLoad.setProgress(50)
 
             dbManager.stopsDao.deleteAll()
             dbManager.stopsDao.insertStops(dbParser.parseStops())
 
-            progressLoad!!.setProgress(70)
+            progressLoad.setProgress(70)
 
             dbManager.stopTimesDao.deleteAll()
             dbManager.stopTimesDao.insertStopTimes(dbParser.parseStopTimes())
 
-            progressLoad!!.setProgress(85)
+            progressLoad.setProgress(85)
 
             dbManager.calendarDao.deleteAll()
             dbManager.calendarDao.insertCalendars(dbParser.parseCalendar())
 
-            textLoad!!.setText(R.string.loadFinish)
+            progressLoad.setProgress(100)
+
+            val notificationStar = NotificationStar()
+            notificationStar.sendNotifFinish(activity)
+
+            textLoad.setText(R.string.loadFinish)
         })
         t.start()
 

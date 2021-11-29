@@ -9,7 +9,10 @@ import com.example.tp3_star.dataBase.entities.*
 import java.io.File
 import java.io.InputStream
 
-class DBParser(context: Context) {
+class DBParser(context: Context, tw : TextView, pb : ProgressBar) {
+
+    private val tw = tw
+    private val pb = pb
 
     private val context = context
     private val BASE_FOLDER = (context.dataDir).toString()
@@ -35,7 +38,6 @@ class DBParser(context: Context) {
                     line.get(8)))
             }
             else firstLine = false
-
         }
         return retList
     }

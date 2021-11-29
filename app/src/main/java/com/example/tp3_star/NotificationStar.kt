@@ -47,9 +47,9 @@ class NotificationStar {
 
 
     fun sendNotifFinish(context: Context){
-        val mBuilder = NotificationCompat.Builder(context, "notify_001")
+        val mBuilder = NotificationCompat.Builder(context, "notify_002")
         val ii = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 0, ii, 0)
+        val pendingIntent = PendingIntent.getActivity(context, 1, ii, 0)
 
         val bigText = NotificationCompat.BigTextStyle();
         bigText.bigText("Cliquer pour ouvrir l'application");
