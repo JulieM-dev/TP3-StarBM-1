@@ -25,6 +25,10 @@
         </activity>
         <service android:name=".service.StarService" android:process=":remote"></service>
         <receiver android:name=".AlarmReceiver" android:process=":remote"></receiver>
+        <provider
+            android:name=".provider.BusRoutesContentProvider"
+            android:authorities="com.example.tp3_star.provider"
+            android:exported="true"/>
     </application>
 
 </manifest>

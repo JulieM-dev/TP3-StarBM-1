@@ -1,6 +1,7 @@
 package com.example.tp3_star.dataBase
 
 import android.content.Context
+import android.database.Cursor
 import androidx.room.Room
 import com.example.tp3_star.dataBase.entities.BusRoutes
 import com.example.tp3_star.dataBase.entities.DatabaseInfos
@@ -51,6 +52,13 @@ class DBManager (applicationContext : Context) {
     {
        return busRoutesDao.getAll()
     }
+
+
+    fun getRoutesCursor() : Cursor
+    {
+        return busRoutesDao.getAllCursor()
+    }
+
 
     fun insertRoute(busRoutes : BusRoutes)
     {

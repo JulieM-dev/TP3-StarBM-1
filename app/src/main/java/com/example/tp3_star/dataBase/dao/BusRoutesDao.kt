@@ -1,5 +1,6 @@
 package com.example.tp3_star.dataBase.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,6 +11,9 @@ import com.example.tp3_star.dataBase.entities.BusRoutes
 interface BusRoutesDao {
     @Query("SELECT * FROM busroutes")
     fun getAll() : List<BusRoutes>
+
+    @Query("SELECT * FROM busroutes")
+    fun getAllCursor() : Cursor
 
     @Insert
     fun insertBusRoute(vararg busRoutes : BusRoutes)
