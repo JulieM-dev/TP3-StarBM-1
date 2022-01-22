@@ -13,7 +13,7 @@ interface StopsDao {
     @Query("SELECT * FROM stops")
     fun getAll() : List<Stops>
 
-    @Query("SELECT * FROM stops INNER JOIN stoptimes ON stops.stop_id = stoptimes.stop_id WHERE trip_id = :trip_id")
+    @Query("SELECT * FROM stops INNER JOIN stoptimes ON stops.stop_id = stoptimes.stop_id WHERE trip_id = :trip_id ORDER BY stoptimes.stop_sequence")
     fun getFromTrip(trip_id : String) : Cursor
 
 
