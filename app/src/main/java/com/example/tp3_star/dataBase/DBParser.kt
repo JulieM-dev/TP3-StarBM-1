@@ -111,7 +111,9 @@ class DBParser(context: Context, tw : TextView, pb : ProgressBar) {
                     line.get(3),
                     line.get(5).toInt(),
                     line.get(6),
-                    this.strBool(line.get(8)))
+                    this.strBool(line.get(8)),
+                    line.get(2).toDouble()
+                    )
                 )
             }
             else firstLine = false
