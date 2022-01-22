@@ -1,18 +1,11 @@
 package com.example.tp3_star.provider
 
-import android.content.ClipData
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import android.content.ClipData.Item
 
-import androidx.annotation.NonNull
-
-import android.content.ContentUris
-import android.os.Build
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
 import com.example.tp3_star.contract.StarContract
 import com.example.tp3_star.contract.StarContract.AUTHORITY
 import com.example.tp3_star.contract.StarContract.BusRoutes.CONTENT_PATH
@@ -74,7 +67,33 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
                 {
                     throw IllegalArgumentException("trip_id manquant en paramètre pour l'uri $uri")
                 }
+            }
+            else if (uri == StarContract.StopTimes.CONTENT_URI)
+            {
+                if(selectionArgs != null)
+                {
+                    val dbManager = DBManager(context!!)
 
+                    val stop_id = selectionArgs.get(0)
+                    val route_id = selectionArgs.get(1)
+                    val direction_id = selectionArgs.get(2)
+                    val monday = selectionArgs.get(3)
+                    val tuesday = selectionArgs.get(4)
+                    val wednesday = selectionArgs.get(5)
+                    val thursday = selectionArgs.get(6)
+                    val friday = selectionArgs.get(7)
+                    val saturday = selectionArgs.get(8)
+                    val sunday = selectionArgs.get(9)
+
+                    val cursor: Cursor = dbManager.getStopTimesCursor(stop_id!!, route_id!!, direction_id!!, monday!!, tuesday!!, wednesday!!, thursday!!, friday!!, saturday!!, sunday!!)
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
+                else
+                {
+                    throw IllegalArgumentException("stop_id ou route_id manquant en paramètre pour l'uri $uri")
+                }
             }
 
 

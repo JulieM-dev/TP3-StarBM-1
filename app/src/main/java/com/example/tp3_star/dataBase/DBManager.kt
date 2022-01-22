@@ -64,6 +64,21 @@ class DBManager (applicationContext : Context) {
         return stopsDao.getFromTrip(trip_id)
     }
 
+    fun getStopTimesCursor(
+        stopId: String,
+        routeId: String,
+        directionId: String,
+        monday: String,
+        tuesday: String,
+        wednesday: String,
+        thursday: String,
+        friday: String,
+        saturday: String,
+        sunday: String
+    ): Cursor {
+        return stopTimesDao.getFromStopAndRoute(stopId, routeId, directionId, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+    }
+
     fun getRouteDirections(route_id : String) : Cursor
     {
         return tripsDao.getRouteDirections(route_id)
@@ -95,10 +110,5 @@ class DBManager (applicationContext : Context) {
         databaseInfosDao.deleteAll()
         databaseInfosDao.insertDatabaseInfos(DatabaseInfos(1, publication, originUrl, isDownloaded))
     }
-
-
-
-
-
 
 }
