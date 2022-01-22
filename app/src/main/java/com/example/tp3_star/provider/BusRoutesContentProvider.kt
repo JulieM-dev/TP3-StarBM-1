@@ -37,11 +37,47 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
         @Nullable sortOrder: String?
     ): Cursor? {
         if (context != null) {
-            val dbManager = DBManager(context!!)
-            val cursor: Cursor = dbManager.getRoutesCursor()
+            if(uri == StarContract.BusRoutes.CONTENT_URI)
+            {
+                val dbManager = DBManager(context!!)
+                val cursor: Cursor = dbManager.getRoutesCursor()
 
-            cursor.setNotificationUri(context!!.contentResolver, uri)
-            return cursor
+                cursor.setNotificationUri(context!!.contentResolver, uri)
+                return cursor
+            }
+            else if (uri == StarContract.Trips.CONTENT_URI)
+            {
+                if(selection != null)
+                {
+                    val dbManager = DBManager(context!!)
+                    val cursor: Cursor = dbManager.getRouteDirections(selection)
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
+                else
+                {
+                    throw IllegalArgumentException("route_id manquant en paramètre pour l'uri $uri")
+                }
+            }
+            else if (uri == StarContract.Stops.CONTENT_URI)
+            {
+                if(selection != null)
+                {
+                    val dbManager = DBManager(context!!)
+                    val cursor: Cursor = dbManager.getStopsCursor(selection)
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
+                else
+                {
+                    throw IllegalArgumentException("trip_id manquant en paramètre pour l'uri $uri")
+                }
+
+            }
+
+
         }
         throw IllegalArgumentException("Failed to query row for uri $uri")
     }

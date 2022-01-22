@@ -1,5 +1,6 @@
 package com.example.tp3_star.dataBase.dao
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,6 +12,10 @@ import com.example.tp3_star.dataBase.entities.Stops
 interface StopsDao {
     @Query("SELECT * FROM stops")
     fun getAll() : List<Stops>
+
+    @Query("SELECT * FROM stops INNER JOIN stoptimes ON stops.stop_id = stoptimes.stop_id WHERE trip_id = :trip_id")
+    fun getFromTrip(trip_id : String) : Cursor
+
 
     @Query("DELETE FROM stops")
     fun deleteAll()

@@ -59,6 +59,16 @@ class DBManager (applicationContext : Context) {
         return busRoutesDao.getAllCursor()
     }
 
+    fun getStopsCursor(trip_id: String) : Cursor
+    {
+        return stopsDao.getFromTrip(trip_id)
+    }
+
+    fun getRouteDirections(route_id : String) : Cursor
+    {
+        return tripsDao.getRouteDirections(route_id)
+    }
+
 
     fun insertRoute(busRoutes : BusRoutes)
     {
