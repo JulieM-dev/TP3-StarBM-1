@@ -75,8 +75,6 @@ class DBManager (applicationContext : Context) {
         date: Date,
         heure: String
     ): Cursor {
-        val sdf = SimpleDateFormat("EEEE")
-
         val calendar = Calendar.getInstance()
         calendar.time = date
         val day = calendar.get(Calendar.DAY_OF_WEEK)

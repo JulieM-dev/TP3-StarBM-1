@@ -4,13 +4,19 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 
 import androidx.annotation.Nullable
+import androidx.annotation.RequiresApi
 import com.example.tp3_star.contract.StarContract
 import com.example.tp3_star.contract.StarContract.AUTHORITY
 import com.example.tp3_star.contract.StarContract.BusRoutes.CONTENT_PATH
 import com.example.tp3_star.dataBase.DBManager
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -22,6 +28,7 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Nullable
     override fun query(
         uri: Uri,
@@ -79,11 +86,20 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
                     val route_id = selectionArgs.get(1)
                     val direction_id = selectionArgs.get(2)
                     // TODO récupérer depuis les paramètres
-                    val date = Calendar.getInstance().time
+
+                    val date = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LocalDate.parse(selectionArgs.get(3), DateTimeFormatter.ISO_LOCAL_DATE)
+                    } else {
+                        null
+                    }
+                    System.out.println(date)
+                    Log.d("App", date.toString())
+
                     val heure = selectionArgs.get(4)
 
 
-                    val cursor: Cursor = dbManager.getStopTimesCursor(stop_id!!, route_id!!, direction_id!!, date!!, heure!!)
+                    val cursor: Cursor = dbManager.getStopTimesCursor(stop_id!!, route_id!!, direction_id!!,
+                        Date.from(date?.atStartOfDay(ZoneId.systemDefault())?.toInstant()), heure!!)
 
                     cursor.setNotificationUri(context!!.contentResolver, uri)
                     return cursor
