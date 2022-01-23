@@ -2,10 +2,14 @@ package com.example.tp3_star.dataBase
 
 import android.content.Context
 import android.database.Cursor
+import android.widget.Switch
 import androidx.room.Room
 import com.example.tp3_star.dataBase.entities.BusRoutes
 import com.example.tp3_star.dataBase.entities.DatabaseInfos
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DBManager (applicationContext : Context) {
 
@@ -59,30 +63,47 @@ class DBManager (applicationContext : Context) {
         return busRoutesDao.getAllCursor()
     }
 
-    fun getStopsCursor(trip_id: String) : Cursor
+    fun getStopsCursor(route_id: String, direction_Id: String) : Cursor
     {
-        return stopsDao.getFromTrip(trip_id)
+        return stopsDao.getFromTrip(route_id, direction_Id)
     }
 
     fun getStopTimesCursor(
         stopId: String,
         routeId: String,
         directionId: String,
-        monday: String,
-        tuesday: String,
-        wednesday: String,
-        thursday: String,
-        friday: String,
-        saturday: String,
-        sunday: String
+        date: Date,
+        heure: String
     ): Cursor {
-        return stopTimesDao.getFromStopAndRoute(stopId, routeId, directionId, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+        val sdf = SimpleDateFormat("EEEE")
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        val day = calendar.get(Calendar.DAY_OF_WEEK)
+        val calendars = calendarDao.getAll()
+        val calIds = ArrayList<Double>()
+        date.time
+        calendars.forEach{
+            when(day)
+            {
+                Calendar.MONDAY -> if (it.monday) calIds.add(it.service_id)
+                Calendar.TUESDAY -> if (it.tuesday) calIds.add(it.service_id)
+                Calendar.WEDNESDAY -> if (it.wednesday) calIds.add(it.service_id)
+                Calendar.THURSDAY -> if (it.thursday) calIds.add(it.service_id)
+                Calendar.FRIDAY -> if (it.friday) calIds.add(it.service_id)
+                Calendar.SATURDAY -> if (it.saturday) calIds.add(it.service_id)
+                Calendar.SUNDAY -> if (it.sunday) calIds.add(it.service_id)
+            }
+        }
+
+        return stopTimesDao.getFromStopAndRoute(stopId, routeId, directionId, calIds, heure)
     }
 
     fun getRouteDirections(route_id : String) : Cursor
     {
         return tripsDao.getRouteDirections(route_id)
     }
+
 
 
     fun insertRoute(busRoutes : BusRoutes)

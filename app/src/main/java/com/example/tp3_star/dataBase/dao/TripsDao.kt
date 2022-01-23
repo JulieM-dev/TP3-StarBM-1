@@ -13,7 +13,7 @@ interface TripsDao {
     @Query("SELECT * FROM trips")
     fun getAll() : List<Trips>
 
-    @Query("SELECT direction_id, trip_headsign FROM trips WHERE route_id = :route_id")
+    @Query("SELECT DISTINCT direction_id, trip_headsign FROM trips WHERE route_id = :route_id")
     fun getRouteDirections(route_id : String) : Cursor
 
     @Query("DELETE FROM trips")

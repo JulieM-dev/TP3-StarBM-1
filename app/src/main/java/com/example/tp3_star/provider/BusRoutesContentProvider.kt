@@ -11,6 +11,7 @@ import com.example.tp3_star.contract.StarContract.AUTHORITY
 import com.example.tp3_star.contract.StarContract.BusRoutes.CONTENT_PATH
 import com.example.tp3_star.dataBase.DBManager
 import java.lang.IllegalArgumentException
+import java.util.*
 
 
 class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
@@ -55,10 +56,10 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
             }
             else if (uri == StarContract.Stops.CONTENT_URI)
             {
-                if(selection != null)
+                if(selectionArgs != null)
                 {
                     val dbManager = DBManager(context!!)
-                    val cursor: Cursor = dbManager.getStopsCursor(selection)
+                    val cursor: Cursor = dbManager.getStopsCursor(selectionArgs.get(0)!!, selectionArgs.get(1)!!)
 
                     cursor.setNotificationUri(context!!.contentResolver, uri)
                     return cursor
@@ -77,15 +78,12 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
                     val stop_id = selectionArgs.get(0)
                     val route_id = selectionArgs.get(1)
                     val direction_id = selectionArgs.get(2)
-                    val monday = selectionArgs.get(3)
-                    val tuesday = selectionArgs.get(4)
-                    val wednesday = selectionArgs.get(5)
-                    val thursday = selectionArgs.get(6)
-                    val friday = selectionArgs.get(7)
-                    val saturday = selectionArgs.get(8)
-                    val sunday = selectionArgs.get(9)
+                    // TODO récupérer depuis les paramètres
+                    val date = Calendar.getInstance().time
+                    val heure = selectionArgs.get(4)
 
-                    val cursor: Cursor = dbManager.getStopTimesCursor(stop_id!!, route_id!!, direction_id!!, monday!!, tuesday!!, wednesday!!, thursday!!, friday!!, saturday!!, sunday!!)
+
+                    val cursor: Cursor = dbManager.getStopTimesCursor(stop_id!!, route_id!!, direction_id!!, date!!, heure!!)
 
                     cursor.setNotificationUri(context!!.contentResolver, uri)
                     return cursor
