@@ -106,6 +106,11 @@ class DBManager (applicationContext : Context) {
         return stopTimesDao.getFromStopAndRoute(stopId, routeId, directionId, calIds, heure)
     }
 
+    fun getStopTimesCursorFromTrip(trip_id: String) : Cursor
+    {
+        return stopTimesDao.getFromTrip(trip_id)
+    }
+
     fun getRouteDirections(route_id : String) : Cursor
     {
         return tripsDao.getRouteDirections(route_id)
