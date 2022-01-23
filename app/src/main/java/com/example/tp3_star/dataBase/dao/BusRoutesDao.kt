@@ -15,6 +15,9 @@ interface BusRoutesDao {
     @Query("SELECT * FROM busroutes")
     fun getAllCursor() : Cursor
 
+    @Query("SELECT DISTINCT busroutes.route_short FROM busroutes INNER JOIN trips ON trips.route_id = busroutes.route_id INNER JOIN stoptimes ON stoptimes.trip_id = trips.trip_id WHERE stoptimes.stop_id = :stop_id")
+    fun getRoutesFromStop(stop_id: String): Cursor
+
     @Insert
     fun insertBusRoute(vararg busRoutes : BusRoutes)
 

@@ -40,11 +40,20 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
         if (context != null) {
             if(uri == StarContract.BusRoutes.CONTENT_URI)
             {
-                val dbManager = DBManager(context!!)
-                val cursor: Cursor = dbManager.getRoutesCursor()
+                if(selection != null)
+                {
+                    val dbManager = DBManager(context!!)
+                    val cursor: Cursor = dbManager.getRoutesCursorFromStop(selection)
 
-                cursor.setNotificationUri(context!!.contentResolver, uri)
-                return cursor
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                } else {
+                    val dbManager = DBManager(context!!)
+                    val cursor: Cursor = dbManager.getRoutesCursor()
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
             }
             else if (uri == StarContract.Trips.CONTENT_URI)
             {
@@ -63,7 +72,14 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
             }
             else if (uri == StarContract.Stops.CONTENT_URI)
             {
-                if(selectionArgs != null)
+                if(selection != null) {
+                    val dbManager = DBManager(context!!)
+                    val cursor: Cursor = dbManager.getStopsSearchCursor(selection)
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
+                else if(selectionArgs != null)
                 {
                     val dbManager = DBManager(context!!)
                     val cursor: Cursor = dbManager.getStopsCursor(selectionArgs.get(0)!!, selectionArgs.get(1)!!)

@@ -63,9 +63,18 @@ class DBManager (applicationContext : Context) {
         return busRoutesDao.getAllCursor()
     }
 
+    fun getRoutesCursorFromStop(selection: String): Cursor {
+        return busRoutesDao.getRoutesFromStop(selection)
+    }
+
     fun getStopsCursor(route_id: String, direction_Id: String) : Cursor
     {
         return stopsDao.getFromTrip(route_id, direction_Id)
+    }
+
+
+    fun getStopsSearchCursor(search: String): Cursor {
+        return stopsDao.getFromSearch(search)
     }
 
     fun getStopTimesCursor(
@@ -129,5 +138,6 @@ class DBManager (applicationContext : Context) {
         databaseInfosDao.deleteAll()
         databaseInfosDao.insertDatabaseInfos(DatabaseInfos(1, publication, originUrl, isDownloaded))
     }
+
 
 }
