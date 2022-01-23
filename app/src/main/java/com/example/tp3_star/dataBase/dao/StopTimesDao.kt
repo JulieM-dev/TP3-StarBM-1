@@ -19,6 +19,9 @@ interface StopTimesDao {
     @Query("SELECT DISTINCT * FROM stoptimes INNER JOIN trips ON stoptimes.trip_id = trips.trip_id WHERE stoptimes.stop_id = :stopId AND trips.route_id = :routeId AND trips.direction_id = :direction AND trips.service_id IN (:services_id) AND stoptimes.arrival_time >= :heure ORDER BY stoptimes.departure_time")
     fun getFromStopAndRoute(stopId: String, routeId: String, direction: String, services_id: List<Double>, heure : String): Cursor
 
+    @Query("SELECT * FROM stoptimes INNER JOIN stops ON stoptimes.stop_id = stops.stop_id WHERE trip_id = :trip_id ORDER BY stop_sequence")
+    fun getFromTrip(trip_id : String) : Cursor
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     @JvmSuppressWildcards
     fun insertStopTimes(stoptimes : List<StopTimes>)

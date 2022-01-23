@@ -104,10 +104,23 @@ class BusRoutesContentProvider : ContentProvider(), StarContract.BusRoutes {
                     cursor.setNotificationUri(context!!.contentResolver, uri)
                     return cursor
                 }
+                else if(selection != null)
+                {
+                    val dbManager = DBManager(context!!)
+
+                    val trip_id = selection
+
+                    val cursor: Cursor = dbManager.getStopTimesCursorFromTrip(trip_id)
+
+                    cursor.setNotificationUri(context!!.contentResolver, uri)
+                    return cursor
+                }
                 else
                 {
                     throw IllegalArgumentException("stop_id ou route_id manquant en paramètre pour l'uri $uri")
                 }
+
+
             }
 
 
